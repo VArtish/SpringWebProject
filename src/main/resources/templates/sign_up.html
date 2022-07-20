@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guests</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="webjars/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+</head>
+<body>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="webjars/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<div style="margin:100px auto 30px auto; text-align: center">
+    <h1 class="display-4">Registration</h1>
+
+    <!-- /login?error=true -->
+    <div th:if="${#request.getParameter('error') == 'true'}"
+         style="color:red;margin:10px 0px;">
+        Login Failed!!!<br/>
+        Reason :
+        <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+              th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION')}">
+                Static summary
+         </span>
+
+    </div>
+
+    <h5>Enter username and password</h5>
+</div>
+<form name='f' th:action="@{/sign_up}" method='POST'>
+    <div style="width: 400px; margin:0 auto; text-align: center">
+        <div th:if="${loginError != null}" style="color:#ea5a5a"><span th:text="${loginError}"></span></div>
+        <div th:if="${#fields.hasErrors('userDto.username')}" class="form-edit" style="color:#ea5a5a">
+            <span th:errors="*{userDto.username}"></span>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Username</span>
+            <input name='username' type="text" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+
+        <div th:if="${emailError != null}" style="color:#ea5a5a"><span th:text="${emailError}"></span></div>
+        <div th:if="${#fields.hasErrors('userDto.email')}" class="form-edit" style="color:#ea5a5a">
+            <span th:errors="*{userDto.email}"></span>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+            <input name='email' type="text" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-sm">
+
+        </div>
+        <div th:if="${passwordError != null}" style="color:#ea5a5a"><span th:text="${passwordError}"></span></div>
+        <div th:if="${#fields.hasErrors('userDto.password')}" class="form-edit" style="color:#ea5a5a">
+            <span th:errors="*{userDto.password}"></span>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm2">Password</span>
+            <input name='password' type="password" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div th:if="${passwordRepError != null}" style="color:#ea5a5a"><span th:text="${passwordRepError}"></span></div>
+        <div th:if="${#fields.hasErrors('userDto.repPassword')}" class="form-edit" style="color:#ea5a5a">
+            <span th:errors="*{userDto.repPassword}"></span>
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm3">Repeat Password</span>
+            <input name='repPassword' type="password" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <input type="submit" value="Register" class="btn btn-primary">
+        <div style="height:min-content; margin: 30px auto">
+            <a href="/sign_in">Log in</a>
+        </div>
+    </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+</html>

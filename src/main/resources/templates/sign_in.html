@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign in</title>
+</head>
+<body class="text-center">
+
+<main class="form-signin">
+    <form name="sign_in_form" method="post" action="/sign_in" novalidate>
+        <input type="hidden" name="command" value="login">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <div class="form-floating">
+            <label for="sign_in_login">Login</label>
+            <input type="text" class="form-control" id="sign_in_login" name="username"
+                   placeholder="Username" pattern="${login_regexp}">
+        </div>
+
+        <div class="form-floating">
+            <label for="sign_in_password">Password</label>
+            <input type="password" class="form-control" id="sign_in_password" name="password" placeholder="Password">
+
+            <div class="invalid-feedback d-block">
+                <p id="sign_in_password_msg"></p>
+            </div>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <br/>
+        <br/>
+    </form>
+    <button class="w-100 btn btn-lg btn-secondary">
+        <a class="w-100 btn btn-lg btn-secondary" href="${abs}/controller?command=go_to_sign_up_page">Sign up</a>
+    </button>
+
+</main>
+</body>
+</html>

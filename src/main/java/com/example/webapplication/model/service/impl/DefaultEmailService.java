@@ -16,6 +16,7 @@ public class DefaultEmailService implements SimpleEmailService {
     public DefaultEmailService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
+
     @Override
     public void sendMail(SimpleEmailContext email) {
         SimpleMailMessage message = new SimpleMailMessage();

@@ -27,7 +27,7 @@ public class CustomUser implements UserDetails {
     private String password;
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "ur_user_id"),
             inverseJoinColumns = @JoinColumn(name = "ur_role_id")

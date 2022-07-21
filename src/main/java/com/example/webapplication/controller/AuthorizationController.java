@@ -7,8 +7,11 @@ import com.example.webapplication.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 
@@ -21,10 +24,10 @@ public class AuthorizationController {
         this.userService = userService;
     }
 
-    @GetMapping("/sign_in")
+    @GetMapping("/login")
     public String loginPage(Model model) {
         model.addAttribute("userDto", new UserSignInDto());
-        return "sign_in";
+        return "login";
     }
 
     @GetMapping("/sign_up")
@@ -34,10 +37,7 @@ public class AuthorizationController {
     }
 
     @PostMapping("/sign_up")
-    public String registration(@ModelAttribute("userDto") @Valid UserSignUpDto userDto, Model model, Errors errors) {
-        if(errors.hasErrors()) {
-            return "sign_up";
-        }
+    public String registration(@ModelAttribute("userDto") @Valid UserSignUpDto userDto, Errors errors, Model model) {
         try {
             if (!userService.saveUser(userDto, errors)) {
                 return "sign_up";

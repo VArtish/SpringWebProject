@@ -1,7 +1,6 @@
 package com.example.webapplication.model.service;
 
 import com.example.webapplication.exception.WrongAuthorizationException;
-import com.example.webapplication.model.dto.UserSignInDto;
 import com.example.webapplication.model.dto.UserSignUpDto;
 import com.example.webapplication.model.entity.CustomUser;
 import org.springframework.validation.Errors;

@@ -3,21 +3,18 @@ package com.example.webapplication.model.service.impl;
 import com.example.webapplication.exception.WrongAuthorizationException;
 import com.example.webapplication.model.dto.UserSignUpDto;
 import com.example.webapplication.model.entity.CustomUser;
+import com.example.webapplication.model.entity.SimpleEmailContext;
 import com.example.webapplication.model.entity.UserRole;
 import com.example.webapplication.model.entity.type.UserRoleType;
 import com.example.webapplication.model.mapper.UserSignUpDtoMapper;
 import com.example.webapplication.model.repository.UserRepository;
+import com.example.webapplication.model.service.SimpleEmailService;
 import com.example.webapplication.model.service.UserService;
 import com.example.webapplication.util.EncryptedPassword;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 import java.util.*;
@@ -27,14 +24,22 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private static final String PASSWORD_ERROR = "passwordError";
     private static final String PASSWORD_ERROR_MESSAGE = "Password do not match!";
+    private static final String MESSAGE_SUBJECT = "Success authorization!";
+    private static final String MESSAGE_TEXT = "Congratulation!";
+    private SimpleEmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, SimpleEmailService emailService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     @Override
     public boolean saveUser(UserSignUpDto userDto, Errors errors) throws WrongAuthorizationException {
+        if(errors.hasErrors()) {
+            return false;
+        }
+
         if (!userDto.getPassword().equals(userDto.getRepPassword())) {
             throw new WrongAuthorizationException(PASSWORD_ERROR, PASSWORD_ERROR_MESSAGE);
         }
@@ -50,7 +55,17 @@ public class UserServiceImpl implements UserService {
         userRole.setRoleId(UserRoleType.GUEST.getRoleId());
         user.setRoles(Set.of(userRole));
         userRepository.save(user);
+        sendSuccessMessage(user);
+
         return true;
+    }
+
+    private void sendSuccessMessage(CustomUser user) {
+        SimpleEmailContext emailContext = new SimpleEmailContext();
+        emailContext.setTo(user.getEmail());
+        emailContext.setSubject(MESSAGE_SUBJECT);
+        emailContext.setMessage(MESSAGE_TEXT);
+        emailService.sendMail(emailContext);
     }
 
     @Override

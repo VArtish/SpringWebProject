@@ -2,8 +2,7 @@ package com.example.webapplication.model.entity.type;
 
 public enum UserRoleType {
     ADMIN(1),
-    CUSTOMER(2),
-    GUEST(3);
+    GUEST(2);
 
     private int roleId;
 

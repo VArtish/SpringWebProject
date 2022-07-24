@@ -1,5 +1,6 @@
 package com.example.webapplication.configure;
 
+import com.example.webapplication.model.service.impl.OAuth2UserService;
 import com.example.webapplication.model.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class CustomWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userService;
+    @Autowired
+    private OAuth2UserService oAuth2UserService;
 
     @Override
     @Bean
@@ -43,26 +46,28 @@ public class CustomWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+
         httpSecurity.csrf().disable();
 
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/", "/index", "/sign_up").permitAll()
+                .antMatchers("/", "/index", "/user").permitAll()
+                .antMatchers("/login", "/sign_up").anonymous()
                 .anyRequest().authenticated()
-                .and()
-                .oauth2Login()
-                .loginPage("/login")
-                .defaultSuccessUrl("/")
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
-                .permitAll()
                 .and()
                 .logout()
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/")
-                .permitAll();
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .loginPage("/login");
     }
+
 }

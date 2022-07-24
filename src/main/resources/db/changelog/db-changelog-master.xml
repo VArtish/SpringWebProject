@@ -69,6 +69,22 @@
         />
     </changeSet>
 
+    <changeSet id="create-table-currencies" author="postgres">
+        <createTable tableName="currencies">
+            <column name="currency_id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="currency_type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_price_type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
 
 </databaseChangeLog>

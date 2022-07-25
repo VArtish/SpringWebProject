@@ -12,26 +12,27 @@ import com.example.webapplication.model.service.SimpleEmailService;
 import com.example.webapplication.model.service.UserService;
 import com.example.webapplication.util.EncryptedPassword;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
     private static final String PASSWORD_ERROR = "passwordError";
     private static final String PASSWORD_ERROR_MESSAGE = "Password do not match!";
     private static final String MESSAGE_SUBJECT = "Success authorization!";
     private static final String MESSAGE_TEXT = "Congratulation!";
+    private final ApplicationEventPublisher eventPublisher;
     private SimpleEmailService emailService;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, SimpleEmailService emailService) {
+    public UserServiceImpl(UserRepository userRepository, SimpleEmailService emailService, ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -61,11 +62,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private void sendSuccessMessage(CustomUser user) {
-        SimpleEmailContext emailContext = new SimpleEmailContext();
-        emailContext.setTo(user.getEmail());
-        emailContext.setSubject(MESSAGE_SUBJECT);
-        emailContext.setMessage(MESSAGE_TEXT);
-        emailService.sendMail(emailContext);
+        SimpleEmailContext emailContext = new SimpleEmailContext(this, MESSAGE_TEXT, user.getEmail(), MESSAGE_SUBJECT);
+        emailService.sendSuccessMessage(emailContext);
     }
 
     @Override

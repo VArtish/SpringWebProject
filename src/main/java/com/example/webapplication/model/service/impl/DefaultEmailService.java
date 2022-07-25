@@ -3,6 +3,7 @@ package com.example.webapplication.model.service.impl;
 import com.example.webapplication.model.entity.SimpleEmailContext;
 import com.example.webapplication.model.service.SimpleEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ public class DefaultEmailService implements SimpleEmailService {
     }
 
     @Override
-    public void sendMail(SimpleEmailContext email) {
+    @EventListener(SimpleEmailContext.class)
+    public void sendSuccessMessage(SimpleEmailContext email) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(MESSAGE_SENDER);
         message.setTo(email.getTo());

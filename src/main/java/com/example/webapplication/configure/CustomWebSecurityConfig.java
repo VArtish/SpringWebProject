@@ -3,6 +3,7 @@ package com.example.webapplication.configure;
 import com.example.webapplication.model.service.impl.OAuth2UserService;
 import com.example.webapplication.model.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -67,7 +68,9 @@ public class CustomWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
-                .loginPage("/login");
+                .loginPage("/login")
+                .and().httpBasic();
+
     }
 
 }

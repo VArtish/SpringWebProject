@@ -50,10 +50,4 @@ public class AuthorizationController {
 
         return "redirect:/";
     }
-
-    @GetMapping("/user")
-    public String user() {
-        currencyService.updateCurrencyScheduled();
-        return "";
-    }
 }

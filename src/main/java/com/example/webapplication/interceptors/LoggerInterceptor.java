@@ -17,8 +17,9 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        timer.reset();
         timer.start();
-        LOGGER.info("Request = " + request.toString());
+        LOGGER.info("Request path = " + request.toString());
         return true;
     }
 
@@ -27,11 +28,9 @@ public class LoggerInterceptor implements HandlerInterceptor {
         timer.stop();
         LOGGER.info("Response = " + response.toString());
         LOGGER.info("Work time = " + timer);
-        timer.reset();
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }

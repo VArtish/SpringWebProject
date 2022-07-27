@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+
+  postgresc:
+    image: postgres:13.3
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task
+
+  webapp:
+    image: 224f0b6e6a61
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresc:5432/task
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - postgresc
+      - Logstash
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+  elasticsearch:
+    build: config/elasticsearch/
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+
+  logstash:
+      build: config/logstash/
+      container_name: logstash
+      command: -f /etc/logstash/conf.d/
+      volumes:
+        - ./config/logstash/config:/etc/logstash/conf.d
+      ports:
+        - 5400:5400
+      links:
+        - elasticsearch
+
+  kibana:
+      build: config/kibana/
+      container_name: kibana
+      volumes:
+        - ./config/kibana/config/:/opt/kibana/config/
+      ports:
+        - 5601:5601
+      links:
+        - elasticsearch

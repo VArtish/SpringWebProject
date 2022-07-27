@@ -7,6 +7,7 @@ import com.example.webapplication.model.repository.CurrencyRepository;
 import com.example.webapplication.model.service.CurrencyService;
 import com.example.webapplication.model.service.RestTemplateService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     @Scheduled(cron = "0 0/30 * * * *")
+    @Timed
     public void updateCurrencyScheduled() {
         List<Currency> currencies = (List<Currency>) currencyRepository.findAll();
         Map<String, String> parameters = formParameters();

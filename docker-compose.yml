@@ -3,6 +3,7 @@ version: '3.7'
 services:
 
   postgresc:
+    container_name: postgresc
     image: postgres:13.3
     ports:
       - 5432:5432
@@ -17,6 +18,12 @@ services:
       - 9090:9090
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
+
+  redis-server:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
 
   grafana:
     image: grafana/grafana

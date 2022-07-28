@@ -3,8 +3,10 @@ package com.example.webapplication.controller;
 import com.example.webapplication.exception.WrongAuthorizationException;
 import com.example.webapplication.model.dto.UserSignInDto;
 import com.example.webapplication.model.dto.UserSignUpDto;
+import com.example.webapplication.model.entity.Bank;
 import com.example.webapplication.model.service.CurrencyService;
 import com.example.webapplication.model.service.UserService;
+import com.example.webapplication.model.service.impl.BankDistributedCacheServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class AuthorizationController {
     private final UserService userService;
     private final CurrencyService currencyService;
+    @Autowired
+    private BankDistributedCacheServiceImpl bankDistributedCacheService;
 
     @Autowired
     public AuthorizationController(UserService userService, CurrencyService currencyService) {

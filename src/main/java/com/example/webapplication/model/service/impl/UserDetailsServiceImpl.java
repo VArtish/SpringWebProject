@@ -3,6 +3,7 @@ package com.example.webapplication.model.service.impl;
 import com.example.webapplication.model.entity.CustomUser;
 import com.example.webapplication.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

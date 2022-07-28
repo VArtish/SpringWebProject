@@ -12,6 +12,7 @@ import com.example.webapplication.model.service.SimpleEmailService;
 import com.example.webapplication.model.service.UserService;
 import com.example.webapplication.util.EncryptedPassword;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;

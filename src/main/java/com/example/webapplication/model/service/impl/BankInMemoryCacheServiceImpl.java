@@ -6,14 +6,26 @@ import org.ehcache.Cache;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("bankInMemoryCache")
 public class BankInMemoryCacheServiceImpl implements CustomCacheService<Long, Bank> {
     private Cache<Long, Bank> cache;
 
     public BankInMemoryCacheServiceImpl(@Qualifier("simpleBankCache") Cache<Long, Bank> cache) {
         this.cache = cache;
+    }
+
+    @PostConstruct
+    private void init() {
+        List<Bank> banks = new ArrayList<>();
+        for(int i = 0; i < banks.size(); i++) {
+            Bank bank = banks.get(i);
+            add(bank.getId(), bank);
+        }
     }
 
     @Override
@@ -36,5 +48,10 @@ public class BankInMemoryCacheServiceImpl implements CustomCacheService<Long, Ba
         }
 
         return Optional.ofNullable(bank);
+    }
+
+    @Override
+    public List<Bank> getAll() {
+        throw new UnsupportedOperationException();
     }
 }

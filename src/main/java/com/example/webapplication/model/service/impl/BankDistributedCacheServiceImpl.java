@@ -8,20 +8,29 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("bankDistributedCache")
 public class BankDistributedCacheServiceImpl implements CustomCacheService<Long, Bank> {
     private static final String KEY = "Bank";
     private RedisTemplate<String, Object> redisTemplate;
     private HashOperations hashOperations;
+
     @Autowired
-    public BankDistributedCacheServiceImpl(RedisTemplate<String, Object> redisTemplate){
+    public BankDistributedCacheServiceImpl(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+
     @PostConstruct
-    private void init(){
+    private void init() {
         hashOperations = redisTemplate.opsForHash();
+        List<Bank> banks = new ArrayList<>();
+        for(int i = 0; i < banks.size(); i++) {
+            Bank bank = banks.get(i);
+            add(bank.getId(), bank);
+        }
     }
 
     @Override
@@ -38,5 +47,10 @@ public class BankDistributedCacheServiceImpl implements CustomCacheService<Long,
     public Optional<Bank> find(Long id) {
         Bank bank = (Bank) hashOperations.get(KEY, id);
         return Optional.ofNullable(bank);
+    }
+
+    @Override
+    public List<Bank> getAll() {
+        return hashOperations.values(KEY);
     }
 }

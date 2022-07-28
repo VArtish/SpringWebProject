@@ -86,5 +86,19 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="create-table-banks" author="postgres">
+        <createTable tableName="banks">
+            <column name="bank_id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="bank_address" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_name" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 
 </databaseChangeLog>

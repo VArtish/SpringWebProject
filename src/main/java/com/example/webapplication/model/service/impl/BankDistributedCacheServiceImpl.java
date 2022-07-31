@@ -1,6 +1,7 @@
 package com.example.webapplication.model.service.impl;
 
 import com.example.webapplication.model.entity.Bank;
+import com.example.webapplication.model.repository.BanksRepository;
 import com.example.webapplication.model.service.CustomCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -17,16 +18,18 @@ public class BankDistributedCacheServiceImpl implements CustomCacheService<Long,
     private static final String KEY = "Bank";
     private RedisTemplate<String, Object> redisTemplate;
     private HashOperations hashOperations;
+    private BanksRepository banksRepository;
 
     @Autowired
-    public BankDistributedCacheServiceImpl(RedisTemplate<String, Object> redisTemplate) {
+    public BankDistributedCacheServiceImpl(RedisTemplate<String, Object> redisTemplate, BanksRepository banksRepository) {
         this.redisTemplate = redisTemplate;
+        this.banksRepository = banksRepository;
     }
 
     @PostConstruct
     private void init() {
         hashOperations = redisTemplate.opsForHash();
-        List<Bank> banks = new ArrayList<>();
+        List<Bank> banks = (List) banksRepository.findAll();
         for(int i = 0; i < banks.size(); i++) {
             Bank bank = banks.get(i);
             add(bank.getId(), bank);

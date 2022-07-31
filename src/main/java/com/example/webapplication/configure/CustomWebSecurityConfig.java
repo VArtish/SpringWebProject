@@ -53,7 +53,7 @@ public class CustomWebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/", "/index", "/user").permitAll()
-                .antMatchers("/login", "/sign_up").anonymous()
+                .antMatchers("/login", "/sign_up", "/roles").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

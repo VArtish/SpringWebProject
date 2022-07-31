@@ -1,7 +1,6 @@
 version: '3.7'
 
 services:
-
   postgresc:
     container_name: postgresc
     image: postgres:13.3
@@ -44,22 +43,58 @@ services:
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
 
   logstash:
-      build: config/logstash/
-      container_name: logstash
-      command: -f /etc/logstash/conf.d/
-      volumes:
-        - ./config/logstash/config:/etc/logstash/conf.d
-      ports:
-        - 5400:5400/tcp
-      links:
-        - elasticsearch
+    build: config/logstash/
+    container_name: logstash
+    command: -f /etc/logstash/conf.d/
+    volumes:
+      - ./config/logstash/config:/etc/logstash/conf.d
+    ports:
+      - 5400:5400/tcp
+    links:
+      - elasticsearch
 
   kibana:
-      build: config/kibana/
-      container_name: kibana
-      volumes:
-        - ./config/kibana/config/:/opt/kibana/config/
-      ports:
-        - 5601:5601
-      links:
-        - elasticsearch
+    build: config/kibana/
+    container_name: kibana
+    volumes:
+      - ./config/kibana/config/:/opt/kibana/config/
+    ports:
+      - 5601:5601
+    links:
+      - elasticsearch
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: wurstmeister/kafka
+    hostname: broker
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPIC: "Registration"
+    depends_on:
+      - zookeeper
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=registration
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - 27017:27017/tcp
+    hostname: localhost
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:r
+
+

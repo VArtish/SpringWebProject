@@ -28,5 +28,4 @@ public class Currency implements Serializable {
     private CurrencyType priceType;
     @Column(name = "currency_price")
     private double price;
-
 }
